@@ -1,0 +1,7 @@
+<launch>
+    <node
+        name="recognizer" pkg="uchile_speech_web" type="recognizer_web.py" ns="/bender/speech"
+        respawn="false" output="screen">
+    </node>
+
+</launch>
