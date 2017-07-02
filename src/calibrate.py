@@ -13,7 +13,7 @@ import uchile_speech_web.msg
 def tester_client():
     # Creates the SimpleActionClient, passing the type of the action
     # (FibonacciAction) to the constructor.
-    client = actionlib.SimpleActionClient('/calibrate_threshold', uchile_speech_web.msg.CalibrateThresholdAction)
+    client = actionlib.SimpleActionClient('recognizer/calibrate_threshold', uchile_speech_web.msg.CalibrateThresholdAction)
 
     # Waits until the action server has started up and started
     # listening for goals.

@@ -63,5 +63,8 @@ class SpeechRecognitionServer:
 
 if __name__ == '__main__':
 	rospy.init_node('recognizer')
+	rospy.loginfo("I AM ALIVE!!!!!!!!!!!!")
+	rospy.loginfo("So master, I am expecting your command")
 	server = SpeechRecognitionServer()
+	rospy.loginfo("Remember to calibrate me if you have trouble")
 	rospy.spin()
