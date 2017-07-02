@@ -9,8 +9,8 @@ from uchile_speech_web.msg import DoRecognitionAction, DoRecognitionResult, Cali
 
 class SpeechRecognitionServer:
 	def __init__(self):
-		self.recognition_server = actionlib.SimpleActionServer('recognizer/recognizer_action', DoRecognitionAction, self.execute, False)
-		self.threshold_server = actionlib.SimpleActionServer('calibrate_threshold',CalibrateThresholdAction,self.calibrate,False)
+		self.recognition_server = actionlib.SimpleActionServer('~recognizer_action', DoRecognitionAction, self.execute, False)
+		self.threshold_server = actionlib.SimpleActionServer('~calibrate_threshold',CalibrateThresholdAction,self.calibrate,False)
 		self.recognition_server.start()
 		self.threshold_server.start()
 		self.recognizer = sr.Recognizer()
@@ -23,9 +23,9 @@ class SpeechRecognitionServer:
 	def execute(self, goal):
 		self.is_recognizing = True
 		with sr.Microphone() as source:
-			print('Reconociendo')
+			rospy.loginfo('Reconociendo')
 			audio = self.recognizer.listen(source)
-			print('Listoco')
+			rospy.loginfo('Listoco, I am sending the audio to google. It might take a while')
 		try:
 			recognized_sentence=self.recognizer.recognize_google(audio)
 			self.recognition_response.final_result = recognized_sentence
@@ -34,9 +34,12 @@ class SpeechRecognitionServer:
 			self.is_recognizing = False
 			return
 		except sr.UnknownValueError:
-			print("Google Speech Recognition could not understand audio")
+			rospy.loginfo("Google Speech Recognition could not understand audio")
+			self.recognition_server.set_aborted()
+			self.is_recognizing = False
 		except sr.RequestError as e:
-			print("Could not request results from Google Speech Recognition service; {0}".format(e))
+			rospy.loginfo("Could not request results from Google Speech Recognition service; {0}".format(e))
+			self.is_recognizing = False
 
 
 	def calibrate(self,goal):
@@ -45,20 +48,20 @@ class SpeechRecognitionServer:
 			duration = goal.duration
 		if self.is_recognizing:
 			self.threshold_server.set_preempted()
-			print('The recognizer is recognizing')
+			rospy.logwarn("The recognizer is recognizing; I can't stole the power of the mic to calibrate it")
 			return
 
 		with sr.Microphone() as source:
-			print('Calibrating...')
+			rospy.loginfo('Calibrating...')
 			self.recognizer.adjust_for_ambient_noise(source,duration=duration)
 		self.threshold_server.set_succeeded()
-		print('OK!')
+		rospy.loginfo('OK! the mic is calibrated')
 		return
 
 
 
 
 if __name__ == '__main__':
-	rospy.init_node('speech_recognition_web')
+	rospy.init_node('recognizer')
 	server = SpeechRecognitionServer()
 	rospy.spin()

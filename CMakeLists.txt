@@ -8,7 +8,6 @@ find_package(catkin REQUIRED COMPONENTS
   message_generation
   actionlib_msgs
   actionlib
-  uchile_util
 )
 
 find_package(Boost REQUIRED COMPONENTS system signals thread)
@@ -31,7 +30,7 @@ generate_messages(
 
 
 catkin_package(
-  CATKIN_DEPENDS rospy std_msgs message_runtime actionlib_msgs actionlib uchile_util
+  CATKIN_DEPENDS rospy std_msgs message_runtime actionlib_msgs actionlib 
 
 )
 

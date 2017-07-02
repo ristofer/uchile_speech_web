@@ -61,11 +61,6 @@
     <exec_depend>message_runtime</exec_depend>
 
 
-    <!-- === bender depends === -->
-    <depend>uchile_msgs</depend>
-    <depend>uchile_srvs</depend>
-    <depend>uchile_util</depend>
-
     <export>
     </export>
   
